@@ -7,7 +7,7 @@ exports.create = async (req, res) => {
     };
 
     if (!payload.name || !payload.price) {
-        res.status(200).json({
+        res.status(400).json({
             success: false,
             message: 'Missing product information'
         });
@@ -71,7 +71,7 @@ exports.updateById = async (req, res) => {
     };
 
     if (!payload.name || !payload.price) {
-        res.status(200).json({
+        res.status(400).json({
             success: false,
             message: 'Missing product information'
         });
