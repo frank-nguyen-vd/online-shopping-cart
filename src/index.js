@@ -27,6 +27,8 @@ app.get('/profile', requiresAuth(), (req, res) => {
     res.send(JSON.stringify(req.oidc.user));
 });
 
+require('./resources/router')(app);
+
 app.listen(port, () => {
     console.log(`API server is running on port ${port}`);
 });
