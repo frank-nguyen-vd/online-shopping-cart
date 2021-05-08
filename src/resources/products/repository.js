@@ -15,12 +15,12 @@ exports.create = async (payload) => {
     return newProduct;
 };
 
-exports.update = async (id, payload) => {
+exports.updateById = async (id, payload) => {
     const newProduct = await Products.findByIdAndUpdate(id, payload);
     return newProduct;
 };
 
-exports.remove = async (id) => {
+exports.removeById = async (id) => {
     const product = await Products.findByIdAndRemove(id);
     return product;
 };
