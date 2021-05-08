@@ -18,6 +18,13 @@ app.get('/', (req, res) => {
     });
 });
 
+app.get('/welcome', (req, res) => {
+    res.json({
+        success: true,
+        message: 'You have logged in'
+    });
+});
+
 
 
 app.listen(port, () => {
