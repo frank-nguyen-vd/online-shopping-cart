@@ -92,7 +92,7 @@ exports.updateById = async (req, res) => {
     }
 };
 
-exports.removeProduct = async (req, res) => {
+exports.removeById = async (req, res) => {
     try {
         const id = req.params.id;
         const productDetails = await productRepository.removeById(id);
