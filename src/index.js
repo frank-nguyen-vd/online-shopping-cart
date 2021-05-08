@@ -18,8 +18,6 @@ app.get('/', (req, res) => {
     });
 });
 
-
-
 require('./resources/router')(app);
 
 app.listen(port, () => {
