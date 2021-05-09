@@ -61,7 +61,7 @@ ADMINISTATORS
 -   [ ] Create resource Carts
 
     -   [ ] Create a model with fields userId, totalPrice, items where items is an array of {productId, quantity, subTotal}
-    -   [ ] Create a repository with methods addItem, removeItem, updateItem
+    -   [ ] Create a repository with methods find, update, create
     -   [ ] Create a controller with methods addItem, removeItem, updateItem
     -   [ ] Create a router to route endpoints to handlers
 
