@@ -65,7 +65,7 @@ ADMINISTATORS
     -   [ ] Create a controller with methods caddItem, removeItem, updateItem
     -   [ ] Create a router to route endpoints to handlers
 
--   [ ] Create endpoints carts
+-   [ ] Create endpoints Carts
 
     -   [ ] Write endpoint POST /carts?customerId=[customerId] with payload {productId, quantity}.
         > _Note_: quanity 0 means remove the product from the cart
