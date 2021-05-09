@@ -14,7 +14,7 @@ const productSchema = mongoose.Schema({
     }
 });
 const cartSchema = mongoose.Schema({
-    userId: {
+    customerId: {
         type: String,
         required: [true, 'Please include the user id']
     },

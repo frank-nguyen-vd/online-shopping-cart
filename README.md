@@ -62,7 +62,7 @@ ADMINISTATORS
 
     -   [ ] Create a model with fields userId, totalPrice, items where items is an array of {productId, quantity, subTotal}
     -   [ ] Create a repository with methods addItem, removeItem, updateItem
-    -   [ ] Create a controller with methods caddItem, removeItem, updateItem
+    -   [ ] Create a controller with methods addItem, removeItem, updateItem
     -   [ ] Create a router to route endpoints to handlers
 
 -   [ ] Create endpoints Carts
