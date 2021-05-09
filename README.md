@@ -183,7 +183,7 @@ POST `/users/login`
 
 ```json
 {
-    "success": True,
+    "success": true,
     "message": "Log in successfully",
     "data": { "token": "hk54hjk5cb$@*%$W40297g9gfs" }
 }
