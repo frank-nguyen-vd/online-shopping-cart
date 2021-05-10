@@ -1,31 +1,11 @@
 const router = require('express').Router();
 const usersController = require('./controller');
-const jwt = require('jsonwebtoken');
-
-require('dotenv').config();
+const jwtService = require('../../services/jwt-authenticate');
 
 router.post('/', usersController.create);
 
-router.get('/', validateUser, usersController.findAll);
+router.get('/', jwtService.authenticate, usersController.findAll);
 
-router.post('/login', usersController.authenticate);
+router.post('/login', usersController.validate);
 
 module.exports = router;
-
-function validateUser(req, res) {
-    jwt.verify(
-        req.headers['x-access-token'],
-        process.env.SECRET_KEY,
-        (err, decode) => {
-            if (err) {
-                console.log(err);
-                res.status(401).json({
-                    success: false,
-                    message: 'Unauthorized'
-                });
-            } else {
-                req.body.userId = decoded.id;
-            }
-        }
-    );
-}

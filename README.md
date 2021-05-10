@@ -61,11 +61,11 @@ ADMINISTATORS
 -   [ ] Create resource Carts
 
     -   [ ] Create a model with fields userId, totalPrice, items where items is an array of {productId, quantity, subTotal}
-    -   [ ] Create a repository with methods addItem, removeItem, updateItem
-    -   [ ] Create a controller with methods caddItem, removeItem, updateItem
+    -   [ ] Create a repository with methods find, update, create
+    -   [ ] Create a controller with methods addItem. Adding non-positive quantity of an item to the cart will delete the item. To reduce the quantity of an item X, we first remove the item X from the cart then add the item X with new quantity to the cart
     -   [ ] Create a router to route endpoints to handlers
 
--   [ ] Create endpoints carts
+-   [ ] Create endpoints Carts
 
     -   [ ] Write endpoint POST /carts?customerId=[customerId] with payload {productId, quantity}.
         > _Note_: quanity 0 means remove the product from the cart
@@ -270,11 +270,60 @@ DELETE `/products/:id`
 }
 ```
 
-## Errors
+GET `/carts`
 
-| Code | Type          | Message               |
-| ---- | ------------- | --------------------- |
-| 400  | Client errors | Bad request           |
-| 404  | Client errors | Resource not found    |
-| 403  | Client errors | Unauthorized          |
-| 500  | Server errors | Internal server error |
+-   Description: Retrieve cart details of a customer
+-   Request Arguments:
+    -   Bearer Token
+-   Returns
+
+```json
+{
+    "success": true,
+    "message": "Cart is retrieved",
+    "data": {
+        "customerId": "nfdah53h5l20&!@*fadsf",
+        "items": [
+            { "name": "eggs", "quantity": 10, "subTotal": 120 },
+            { "name": "bread", "quantity": 1, "subTotal": 1.2 }
+        ],
+        "totalPrice": 121.2
+    }
+}
+```
+
+POST `/carts`
+
+-   Description: Add items into cart
+-   Request Arguments:
+    -   Bearer Token
+-   Request Body:
+
+```json
+{
+    "productId": "nfad890a7909791",
+    "quantity": 10
+}
+```
+
+-   Returns
+
+```json
+{
+    "success": true,
+    "message": "Cart is retrieved",
+    "data": {
+        "customerId": "nfdah53h5l20&!@*fadsf",
+        "items": [
+            { "productId": "nfad890a7909791", "quantity": 10, "subTotal": 120 },
+            { "productId": "jlkh54325khhkj3", "quantity": 1, "subTotal": 1.2 }
+        ],
+        "totalPrice": 121.2
+    }
+}
+```
+
+-   Possible Errors:
+    -   404: Product is not found
+    -   400: Missing product information
+    -   400: Missing customer information
