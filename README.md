@@ -62,7 +62,7 @@ ADMINISTATORS
 
     -   [ ] Create a model with fields userId, totalPrice, items where items is an array of {productId, quantity, subTotal}
     -   [ ] Create a repository with methods find, update, create
-    -   [ ] Create a controller with methods addItem, removeItem, updateItem
+    -   [ ] Create a controller with methods addItem. Adding non-positive quantity of an item to the cart will delete the item. To reduce the quantity of an item X, we first remove the item X from the cart then add the item X with new quantity to the cart
     -   [ ] Create a router to route endpoints to handlers
 
 -   [ ] Create endpoints Carts
@@ -259,6 +259,23 @@ DELETE `/products/:id`
 -   Request Arguments:
     -   Bearer token
 -   Returns:
+
+```json
+{
+    "success": true,
+    "data": {
+        "name": "Nokia 3310",
+        "price": 50
+    }
+}
+```
+
+GET `/carts`
+
+-   Description: Retrieve cart details of a customer
+-   Request Arguments:
+    -   Bearer Token
+-   Returns
 
 ```json
 {
