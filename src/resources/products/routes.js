@@ -1,14 +1,15 @@
 const router = require('express').Router();
 const productsController = require('./controller');
+const jwtService = require('../../services/jwt-authenticate');
 
-router.post('/', productsController.create);
+router.post('/', jwtService.authenticate, productsController.create);
 
 router.get('/', productsController.findAll);
 
 router.get('/:id', productsController.findById);
 
-router.patch('/:id', productsController.updateById);
+router.patch('/:id', jwtService.authenticate, productsController.updateById);
 
-router.delete('/:id', productsController.removeById);
+router.delete('/:id', jwtService.authenticate, productsController.removeById);
 
 module.exports = router;

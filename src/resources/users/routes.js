@@ -2,9 +2,7 @@ const router = require('express').Router();
 const usersController = require('./controller');
 const jwtService = require('../../services/jwt-authenticate');
 
-require('dotenv').config();
-
-router.post('/', jwtService.authenticate, usersController.create);
+router.post('/', usersController.create);
 
 router.get('/', jwtService.authenticate, usersController.findAll);
 
