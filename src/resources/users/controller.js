@@ -3,10 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 exports.create = async (req, res) => {
-    const payload = {
-        username: req.body.username,
-        password: req.body.password
-    };
+    const { username, password } = req.body;
     const foundUser = await userRepository.findOne({ username });
     if (foundUser) {
         res.status(400).json({
@@ -16,7 +13,11 @@ exports.create = async (req, res) => {
         return;
     }
     try {
-        const user = await userRepository.create(payload);
+        const user = await userRepository.create({
+            username,
+            password,
+            role: 'customer'
+        });
         res.status(200).json({
             success: true,
             message: 'New user created',
@@ -32,12 +33,36 @@ exports.create = async (req, res) => {
 };
 exports.validate = async (req, res) => {
     const { username, password } = req.body;
+
+    if (
+        username === process.env.SECRET_USERNAME &&
+        password === process.env.SECRET_PASSWORD
+    ) {
+        const token = jwt.sign(
+            { id: 'MASTER', role: user.role },
+            process.env.SECRET_KEY,
+            {
+                expiresIn: '1h'
+            }
+        );
+
+        res.status(200).json({
+            success: true,
+            message: 'Welcome MASTER',
+            data: { token: token }
+        });
+    }
+
     try {
         const user = await userRepository.findOne({ username });
         if (bcrypt.compareSync(password, user.password)) {
-            const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
-                expiresIn: '1h'
-            });
+            const token = jwt.sign(
+                { id: user.id, role: user.role },
+                process.env.SECRET_KEY,
+                {
+                    expiresIn: '1h'
+                }
+            );
 
             res.status(200).json({
                 success: true,
