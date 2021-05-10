@@ -7,3 +7,8 @@ p, customer, carts, read
 p, customer, carts, update
 p, customer, transactions, read
 p, admin, transactions, read
+p, admin, users, create
+p, admin, users, read
+p, admin, users, update
+p, admin, users, delete
+p, customer, users, create
