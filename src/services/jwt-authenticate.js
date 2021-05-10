@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
 
-exports.authenticate = async (req, res) => {
+exports.authenticate = async (req, res, next) => {
     try {
         const bearer_token = req.headers['authorization'];
         const jwt_token = bearer_token.split(' ')[1];
@@ -16,6 +16,7 @@ exports.authenticate = async (req, res) => {
                 });
             } else {
                 req.body.userId = decoded.id;
+                next();
             }
         });
     } catch (err) {
