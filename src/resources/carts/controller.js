@@ -2,20 +2,28 @@ const cartRepository = require('./repository');
 const productRepository = require('../products/repository');
 
 exports.view = async (req, res) => {
-    const { userId } = req.body;
-    let cart = await cartRepository.find(userId);
-    if (!cart) {
-        cart = await cartRepository.create({
-            customerId: userId,
-            items: [],
-            totalPrice: 0
+    try {
+        const { userId } = req.body;
+        let cart = await cartRepository.find(userId);
+        if (!cart) {
+            cart = await cartRepository.create({
+                customerId: userId,
+                items: [],
+                totalPrice: 0
+            });
+        }
+        res.status(200).json({
+            success: true,
+            message: 'Cart is retrieved',
+            data: cart
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error'
         });
     }
-    res.status(200).json({
-        success: true,
-        message: 'Cart is retrieved',
-        data: cart
-    });
 };
 
 exports.addItem = async (req, res) => {

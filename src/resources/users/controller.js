@@ -7,7 +7,14 @@ exports.create = async (req, res) => {
         username: req.body.username,
         password: req.body.password
     };
-
+    const foundUser = await userRepository.findOne({ username });
+    if (foundUser) {
+        res.status(400).json({
+            success: false,
+            message: 'This account exists'
+        });
+        return;
+    }
     try {
         const user = await userRepository.create(payload);
         res.status(200).json({
@@ -24,10 +31,10 @@ exports.create = async (req, res) => {
     }
 };
 exports.validate = async (req, res) => {
-    const payload = { username: req.body.username };
+    const { username, password } = req.body;
     try {
-        const user = await userRepository.findOne(payload);
-        if (bcrypt.compareSync(req.body.password, user.password)) {
+        const user = await userRepository.findOne({ username });
+        if (bcrypt.compareSync(password, user.password)) {
             const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
                 expiresIn: '1h'
             });
@@ -37,12 +44,17 @@ exports.validate = async (req, res) => {
                 message: 'Log in successfuly',
                 data: { token: token }
             });
+        } else {
+            res.status(400).json({
+                success: false,
+                message: 'Invalid username and password'
+            });
         }
     } catch (err) {
         console.log(err);
-        res.status(400).json({
+        res.status(500).json({
             success: false,
-            message: 'Invalid username and password'
+            message: 'Internal server error'
         });
     }
 };

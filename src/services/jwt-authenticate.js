@@ -3,10 +3,11 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 exports.authenticate = async (req, res) => {
-    await jwt.verify(
-        req.headers['x-access-token'],
-        process.env.SECRET_KEY,
-        (err, decoded) => {
+    try {
+        const bearer_token = req.headers['authorization'];
+        const jwt_token = bearer_token.split(' ')[1];
+
+        await jwt.verify(jwt_token, process.env.SECRET_KEY, (err, decoded) => {
             if (err) {
                 console.log(err);
                 res.status(401).json({
@@ -16,6 +17,12 @@ exports.authenticate = async (req, res) => {
             } else {
                 req.body.userId = decoded.id;
             }
-        }
-    );
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error'
+        });
+    }
 };
