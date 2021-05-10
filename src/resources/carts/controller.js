@@ -36,24 +36,24 @@ exports.addItem = async (req, res) => {
         return;
     }
 
-    if (!productId || !quantity) {
+    if (productId == undefined || quantity == undefined) {
         res.status(400).json({
             success: false,
             message: 'Missing product information'
         });
         return;
     }
-
+    let productDetails;
     try {
-        const productDetails = await productRepository.findById(productId);
-
-        if (!productDetails) {
-            res.status(404).json({
-                success: false,
-                message: 'Product not found'
-            });
-        }
-
+        productDetails = await productRepository.findById(productId);
+    } catch (err) {
+        res.status(404).json({
+            success: false,
+            message: 'Product not found'
+        });
+        return;
+    }
+    try {
         let cart = await cartRepository.find(userId);
         if (!cart) {
             const subTotal = productDetails.price * quantity;
@@ -103,11 +103,11 @@ exports.addItem = async (req, res) => {
                     .map((item) => item.subTotal)
                     .reduce((acc, val) => acc + val);
             }
-            const updatedCart = await cartRepository.update(userId, cart);
+            await cartRepository.update(userId, cart);
             res.status(200).json({
                 success: true,
                 message: 'Cart is updated successfully',
-                data: updatedCart
+                data: cart
             });
         }
     } catch (err) {
