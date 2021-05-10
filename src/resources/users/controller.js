@@ -1,11 +1,9 @@
 const userRepository = require('./repository');
 const bcrypt = require('bcrypt');
 const jwtService = require('../../services/authentication/jwt-authenticate');
+const authService = require('../../services/authorization/casbin-authorization');
 const jwt = require('jsonwebtoken');
-import { newEnforcer } from 'casbin';
-const pathToModel = '../../serivces/authorization/basic_model.conf';
-const pathToPolicy = '../../serivces/authorization/basic_model.csv';
-const enforcer = await newEnforcer(pathToModel, pathToPolicy);
+
 require('dotenv').config();
 exports.create = async (req, res) => {
     const { username, password, role } = req.body;
@@ -15,29 +13,29 @@ exports.create = async (req, res) => {
         const decode = await jwtService.decode(jwtToken);
         accessRole = decode.role;
     }
-
-    const subject = accessRole;
-    const object = 'users';
-    const action = 'create';
-    const allowed = await enforcer.enforce(subject, object, action);
-
-    if (!allowed) {
-        res.status(401).json({
-            success: false,
-            message: 'Unauthorized'
-        });
-        return;
-    }
-
-    const foundUser = await userRepository.findOne({ username });
-    if (foundUser) {
-        res.status(400).json({
-            success: false,
-            message: 'This account exists'
-        });
-        return;
-    }
     try {
+        const allowed = await authService.authorize(
+            accessRole,
+            'users',
+            'create'
+        );
+        if (!allowed) {
+            res.status(401).json({
+                success: false,
+                message: 'Unauthorized'
+            });
+            return;
+        }
+
+        const foundUser = await userRepository.findOne({ username });
+        if (foundUser) {
+            res.status(400).json({
+                success: false,
+                message: 'This account exists'
+            });
+            return;
+        }
+
         let user;
         if (accessRole) {
             user = await userRepository.create({
@@ -61,7 +59,7 @@ exports.create = async (req, res) => {
         console.log(err);
         res.status(500).json({
             success: false,
-            message: 'Cannot create new user'
+            message: 'Internal server error'
         });
     }
 };
