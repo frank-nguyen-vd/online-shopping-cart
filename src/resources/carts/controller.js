@@ -4,13 +4,8 @@ const productRepository = require('../products/repository');
 exports.view = async (req, res) => {};
 
 exports.addItem = async (req, res) => {
-    const customerId = req.params.customerId;
-    const payload = {
-        productId: req.body.productId,
-        quantity: parseInt(req.body.quantity)
-    };
-
-    if (!customerId) {
+    const { userId, productId, quantity } = req.body;
+    if (!userId) {
         res.status(400).json({
             success: false,
             message: 'Missing customer information'
@@ -18,7 +13,7 @@ exports.addItem = async (req, res) => {
         return;
     }
 
-    if (!payload.productId || !payload.quantity) {
+    if (!productId || !quantity) {
         res.status(400).json({
             success: false,
             message: 'Missing product information'
@@ -27,9 +22,7 @@ exports.addItem = async (req, res) => {
     }
 
     try {
-        const productDetails = await productRepository.findById(
-            payload.productId
-        );
+        const productDetails = await productRepository.findById(productId);
 
         if (!productDetails) {
             res.status(404).json({
@@ -38,15 +31,15 @@ exports.addItem = async (req, res) => {
             });
         }
 
-        let cart = await cartRepository.find(customerId);
+        let cart = await cartRepository.find(userId);
         if (!cart) {
-            const subTotal = productDetails.price * payload.quantity;
+            const subTotal = productDetails.price * quantity;
             cart = {
-                customerId: customerId,
+                customerId: userId,
                 items: [
                     {
-                        productId: payload.productId,
-                        quantity: payload.quantity,
+                        productId: productId,
+                        quantity: quantity,
                         subTotal: subTotal
                     }
                 ],
@@ -59,23 +52,23 @@ exports.addItem = async (req, res) => {
             });
         } else {
             const foundAtIndex = cart.items.findIndex(
-                (item) => item.productId === payload.productId
+                (item) => item.productId === productId
             );
             const isItemFound = foundAtIndex !== -1;
             if (isItemFound) {
-                if (payload.quantity <= 0) {
+                if (quantity <= 0) {
                     cart.items.splice(foundAtIndex, 1);
                 } else {
                     const foundItem = cart.items[foundAtIndex];
-                    foundItem.quantity += payload.quantity;
+                    foundItem.quantity += quantity;
                     foundItem.subTotal =
                         foundItem.quantity * productDetails.price;
                 }
-            } else if (payload.quantity > 0) {
-                const subTotal = productDetails.price * payload.quantity;
+            } else if (quantity > 0) {
+                const subTotal = productDetails.price * quantity;
                 cart.items.push({
-                    productId: payload.productId,
-                    quantity: payload.quantity,
+                    productId: productId,
+                    quantity: quantity,
                     subTotal: subTotal
                 });
             }
@@ -87,7 +80,7 @@ exports.addItem = async (req, res) => {
                     .map((item) => item.subTotal)
                     .reduce((acc, val) => acc + val);
             }
-            const updatedCart = await cartRepository.update(customerId, cart);
+            const updatedCart = await cartRepository.update(userId, cart);
             res.status(200).json({
                 success: true,
                 message: 'Cart is updated successfully',
