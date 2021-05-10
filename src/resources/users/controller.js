@@ -1,9 +1,17 @@
 const userRepository = require('./repository');
 const bcrypt = require('bcrypt');
+const jwtService = require('../../services/authentication/jwt-authenticate');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 exports.create = async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, role } = req.body;
+    const jwtToken = jwtService.getToken(req);
+    let tokenRole;
+    if (jwtToken) {
+        const decode = await jwtService.decode(jwtToken);
+        tokenRole = decode.role;
+    }
+
     const foundUser = await userRepository.findOne({ username });
     if (foundUser) {
         res.status(400).json({
@@ -13,11 +21,20 @@ exports.create = async (req, res) => {
         return;
     }
     try {
-        const user = await userRepository.create({
-            username,
-            password,
-            role: 'customer'
-        });
+        let user;
+        if (tokenRole) {
+            user = await userRepository.create({
+                username,
+                password,
+                role
+            });
+        } else {
+            user = await userRepository.create({
+                username,
+                password,
+                role: 'customer'
+            });
+        }
         res.status(200).json({
             success: true,
             message: 'New user created',
@@ -39,7 +56,7 @@ exports.validate = async (req, res) => {
         password === process.env.SECRET_PASSWORD
     ) {
         const token = jwt.sign(
-            { id: 'MASTER', role: user.role },
+            { id: 'MASTER', role: 'admin' },
             process.env.SECRET_KEY,
             {
                 expiresIn: '1h'
