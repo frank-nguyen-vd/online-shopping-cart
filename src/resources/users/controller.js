@@ -68,6 +68,8 @@ exports.validate = async (req, res) => {
             message: 'Welcome MASTER',
             data: { token: token }
         });
+
+        return;
     }
 
     try {
