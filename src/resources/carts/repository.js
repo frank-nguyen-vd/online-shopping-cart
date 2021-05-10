@@ -15,5 +15,5 @@ exports.update = async (customerId, payload) => {
         { customerId: customerId },
         payload
     );
-    return newProduct;
+    return cart;
 };

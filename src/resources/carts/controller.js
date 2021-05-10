@@ -1,6 +1,8 @@
 const cartRepository = require('./repository');
 const productRepository = require('../products/repository');
 
+exports.view = async (req, res) => {};
+
 exports.addItem = async (req, res) => {
     const customerId = req.params.customerId;
     const payload = {

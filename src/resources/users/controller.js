@@ -23,7 +23,7 @@ exports.create = async (req, res) => {
         });
     }
 };
-exports.authenticate = async (req, res) => {
+exports.validate = async (req, res) => {
     const payload = { username: req.body.username };
     try {
         const user = await userRepository.findOne(payload);
