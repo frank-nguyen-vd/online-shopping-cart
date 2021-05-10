@@ -10,6 +10,10 @@ const userSchema = mongoose.Schema({
     password: {
         type: String,
         required: [true, 'Please include the hashed password']
+    },
+    role: {
+        type: String,
+        required: [true, 'Please include the role']
     }
 });
 
