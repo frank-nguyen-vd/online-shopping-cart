@@ -36,7 +36,7 @@ exports.addItem = async (req, res) => {
         return;
     }
 
-    if (productId == undefined || quantity == undefined) {
+    if (productId === undefined || quantity === undefined) {
         res.status(400).json({
             success: false,
             message: 'Missing product information'
