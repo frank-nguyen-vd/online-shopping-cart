@@ -280,18 +280,50 @@ GET `/carts`
 ```json
 {
     "success": true,
+    "message": "Cart is retrieved",
     "data": {
-        "name": "Nokia 3310",
-        "price": 50
+        "customerId": "nfdah53h5l20&!@*fadsf",
+        "items": [
+            { "name": "eggs", "quantity": 10, "subTotal": 120 },
+            { "name": "bread", "quantity": 1, "subTotal": 1.2 }
+        ],
+        "totalPrice": 121.2
     }
 }
 ```
 
-## Errors
+POST `/carts`
 
-| Code | Type          | Message               |
-| ---- | ------------- | --------------------- |
-| 400  | Client errors | Bad request           |
-| 404  | Client errors | Resource not found    |
-| 403  | Client errors | Unauthorized          |
-| 500  | Server errors | Internal server error |
+-   Description: Add items into cart
+-   Request Arguments:
+    -   Bearer Token
+-   Request Body:
+
+```json
+{
+    "productId": "nfad890a7909791",
+    "quantity": 10
+}
+```
+
+-   Returns
+
+```json
+{
+    "success": true,
+    "message": "Cart is retrieved",
+    "data": {
+        "customerId": "nfdah53h5l20&!@*fadsf",
+        "items": [
+            { "productId": "nfad890a7909791", "quantity": 10, "subTotal": 120 },
+            { "productId": "jlkh54325khhkj3", "quantity": 1, "subTotal": 1.2 }
+        ],
+        "totalPrice": 121.2
+    }
+}
+```
+
+-   Possible Errors:
+    -   404: Product is not found
+    -   400: Missing product information
+    -   400: Missing customer information
