@@ -2,14 +2,31 @@ const userRepository = require('./repository');
 const bcrypt = require('bcrypt');
 const jwtService = require('../../services/authentication/jwt-authenticate');
 const jwt = require('jsonwebtoken');
+import { newEnforcer } from 'casbin';
+const pathToModel = '../../serivces/authorization/basic_model.conf';
+const pathToPolicy = '../../serivces/authorization/basic_model.csv';
+const enforcer = await newEnforcer(pathToModel, pathToPolicy);
 require('dotenv').config();
 exports.create = async (req, res) => {
     const { username, password, role } = req.body;
     const jwtToken = jwtService.getToken(req);
-    let tokenRole;
+    let accessRole = 'customer';
     if (jwtToken) {
         const decode = await jwtService.decode(jwtToken);
-        tokenRole = decode.role;
+        accessRole = decode.role;
+    }
+
+    const subject = accessRole;
+    const object = 'users';
+    const action = 'create';
+    const allowed = await enforcer.enforce(subject, object, action);
+
+    if (!allowed) {
+        res.status(401).json({
+            success: false,
+            message: 'Unauthorized'
+        });
+        return;
     }
 
     const foundUser = await userRepository.findOne({ username });
@@ -22,7 +39,7 @@ exports.create = async (req, res) => {
     }
     try {
         let user;
-        if (tokenRole) {
+        if (accessRole) {
             user = await userRepository.create({
                 username,
                 password,
