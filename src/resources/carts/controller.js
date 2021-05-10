@@ -1,7 +1,22 @@
 const cartRepository = require('./repository');
 const productRepository = require('../products/repository');
 
-exports.view = async (req, res) => {};
+exports.view = async (req, res) => {
+    const { userId } = req.body;
+    let cart = await cartRepository.find(userId);
+    if (!cart) {
+        cart = await cartRepository.create({
+            customerId: userId,
+            items: [],
+            totalPrice: 0
+        });
+    }
+    res.status(200).json({
+        success: true,
+        message: 'Cart is retrieved',
+        data: cart
+    });
+};
 
 exports.addItem = async (req, res) => {
     const { userId, productId, quantity } = req.body;
