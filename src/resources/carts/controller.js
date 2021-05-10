@@ -1,34 +1,4 @@
 const cartRepository = require('./repository');
-
-exports.create = async (req, res) => {
-    const payload = {
-        name: req.body.name,
-        price: parseFloat(req.body.price)
-    };
-
-    if (!payload.name || !payload.price) {
-        res.status(400).json({
-            success: false,
-            message: 'Missing product information'
-        });
-    } else {
-        try {
-            const product = await productRepository.create({ ...payload });
-
-            res.status(200).json({
-                success: true,
-                data: product
-            });
-        } catch (err) {
-            console.log(err);
-            res.status(500).json({
-                message: err,
-                success: false
-            });
-        }
-    }
-};
-const cartRepository = require('./repository');
 const productRepository = require('../products/repository');
 
 exports.addItem = async (req, res) => {
@@ -129,7 +99,3 @@ exports.addItem = async (req, res) => {
         });
     }
 };
-
-exports.updateItem;
-
-exports.removeItem;
