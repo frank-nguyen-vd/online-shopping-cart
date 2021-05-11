@@ -57,8 +57,11 @@ exports.checkout = async (req, res) => {
     }
     try {
         const transaction = new Transactions(cart);
+        delete transaction.id;
         transaction.timestamp = new Date().toISOString();
-        const createdTransaction = transactionRepository.create(transaction);
+        const createdTransaction = await transactionRepository.create(
+            transaction
+        );
         await cartController.empty(userId);
         res.status(200).json({
             success: true,
