@@ -8,7 +8,7 @@ exports.findById = async (customerId) => {
 
 exports.empty = async (customerId) => {
     const cart = await cartRepository.update(customerId, {
-        customerId: userId,
+        customerId: customerId,
         items: [],
         totalPrice: 0
     });
@@ -18,7 +18,7 @@ exports.empty = async (customerId) => {
 exports.view = async (req, res) => {
     try {
         const { userId } = req.body;
-        const cart = await this.findById(userId);
+        let cart = await this.findById(userId);
         if (!cart) {
             cart = await cartRepository.create({
                 customerId: userId,
@@ -50,7 +50,7 @@ exports.addItem = async (req, res) => {
         return;
     }
 
-    if (productId == undefined || quantity == undefined) {
+    if (productId === undefined || quantity === undefined) {
         res.status(400).json({
             success: false,
             message: 'Missing product information'

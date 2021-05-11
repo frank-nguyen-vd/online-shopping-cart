@@ -3,10 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 exports.create = async (req, res) => {
-    const payload = {
-        username: req.body.username,
-        password: req.body.password
-    };
+    const { username, password } = req.body;
     const foundUser = await userRepository.findOne({ username });
     if (foundUser) {
         res.status(400).json({
@@ -16,7 +13,7 @@ exports.create = async (req, res) => {
         return;
     }
     try {
-        const user = await userRepository.create(payload);
+        const user = await userRepository.create({ username, password });
         res.status(200).json({
             success: true,
             message: 'New user created',

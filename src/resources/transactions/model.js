@@ -27,7 +27,7 @@ const transactionSchema = mongoose.Schema({
         required: [true, 'Please specify total price']
     },
     timestamp: {
-        type: Timestamp,
+        type: String,
         required: [true, 'Please specify date time']
     }
 });

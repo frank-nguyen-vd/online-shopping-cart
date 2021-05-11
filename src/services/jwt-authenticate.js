@@ -4,10 +4,10 @@ require('dotenv').config();
 
 exports.authenticate = async (req, res, next) => {
     try {
-        const bearer_token = req.headers['authorization'];
-        const jwt_token = bearer_token.split(' ')[1];
+        const bearerToken = req.headers.authorization;
+        const jwtToken = bearerToken.split(' ')[1];
 
-        await jwt.verify(jwt_token, process.env.SECRET_KEY, (err, decoded) => {
+        await jwt.verify(jwtToken, process.env.SECRET_KEY, (err, decoded) => {
             if (err) {
                 console.log(err);
                 res.status(401).json({
