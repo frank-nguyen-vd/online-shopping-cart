@@ -1,6 +1,7 @@
 const transactionRepository = require('./repository');
 const cartController = require('../carts/controller');
 const Transactions = require('./model');
+const { _ } = require('lodash');
 
 exports.find = async (req, res) => {
     const { userId } = req.body;
@@ -57,10 +58,9 @@ exports.checkout = async (req, res) => {
     }
     try {
         const transaction = new Transactions(cart);
-        delete transaction.id;
         transaction.timestamp = new Date().toISOString();
         const createdTransaction = await transactionRepository.create(
-            transaction
+            _.omit(transaction, 'id')
         );
         await cartController.empty(userId);
         res.status(200).json({
