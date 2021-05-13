@@ -110,6 +110,16 @@ exports.validate = async (req, res) => {
 
 exports.findAll = async (req, res) => {
     try {
+        const { role } = await jwtService.getCredential(req);
+        const allowed = await authService.authorize(role, 'users', 'read');
+        if (!allowed) {
+            res.status(401).json({
+                success: false,
+                message: 'Unauthorized'
+            });
+            return;
+        }
+
         const users = await userRepository.findAll();
         res.status(200).json({
             success: true,
