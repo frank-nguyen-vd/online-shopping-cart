@@ -1,10 +1,24 @@
 const cartRepository = require('./repository');
 const productRepository = require('../products/repository');
 
+exports.findById = async (customerId) => {
+    const cart = await cartRepository.find(customerId);
+    return cart;
+};
+
+exports.empty = async (customerId) => {
+    const cart = await cartRepository.update(customerId, {
+        customerId: customerId,
+        items: [],
+        totalPrice: 0
+    });
+    return cart;
+};
+
 exports.view = async (req, res) => {
     try {
         const { userId } = req.body;
-        let cart = await cartRepository.find(userId);
+        let cart = await this.findById(userId);
         if (!cart) {
             cart = await cartRepository.create({
                 customerId: userId,

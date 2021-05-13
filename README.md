@@ -327,3 +327,13 @@ POST `/carts`
     -   404: Product is not found
     -   400: Missing product information
     -   400: Missing customer information
+
+POST `/transactions`
+
+-   Description: This endpoint will save the items in the cart in transactions list for for the sake of this assignment. In practice, we can use Stripe API to process payment.
+-   Request Arguments:
+    -   Bearer Token
+-   Request Body: None
+-   Possible errors:
+    -   400: Cart is empty
+    -   500: Internal server error
