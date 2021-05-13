@@ -1,5 +1,14 @@
 const productRepository = require('./repository');
 exports.create = async (req, res) => {
+    const { role } = await jwtService.getCredential(req);
+    const allowed = await authService.authorize(role, 'products', 'create');
+    if (!allowed) {
+        res.status(401).json({
+            success: false,
+            message: 'Unauthorized'
+        });
+        return;
+    }
     const payload = {
         name: req.body.name,
         price: parseFloat(req.body.price)
@@ -64,6 +73,16 @@ exports.findById = async (req, res) => {
 exports.updateById = async (req, res) => {
     const id = req.params.id;
 
+    const { role } = await jwtService.getCredential(req);
+    const allowed = await authService.authorize(role, 'products', 'update');
+    if (!allowed) {
+        res.status(401).json({
+            success: false,
+            message: 'Unauthorized'
+        });
+        return;
+    }
+
     const payload = {
         name: req.body.name,
         price: parseFloat(req.body.price)
@@ -92,6 +111,15 @@ exports.updateById = async (req, res) => {
 };
 
 exports.removeById = async (req, res) => {
+    const { role } = await jwtService.getCredential(req);
+    const allowed = await authService.authorize(role, 'products', 'delete');
+    if (!allowed) {
+        res.status(401).json({
+            success: false,
+            message: 'Unauthorized'
+        });
+        return;
+    }
     try {
         const id = req.params.id;
         const productDetails = await productRepository.removeById(id);
