@@ -2,7 +2,6 @@ const userRepository = require('./repository');
 const bcrypt = require('bcrypt');
 const jwtService = require('../../services/authentication/jwt-authenticate');
 const authService = require('../../services/authorization/casbin-authorization');
-const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
 exports.create = async (req, res) => {
@@ -70,13 +69,7 @@ exports.validate = async (req, res) => {
         username === process.env.SECRET_USERNAME &&
         password === process.env.SECRET_PASSWORD
     ) {
-        const token = jwt.sign(
-            { id: 'MASTER', role: 'admin' },
-            process.env.SECRET_KEY,
-            {
-                expiresIn: '1h'
-            }
-        );
+        const token = jwtService.requestToken({ id: 'MASTER', role: 'admin' });
 
         res.status(200).json({
             success: true,
@@ -90,13 +83,10 @@ exports.validate = async (req, res) => {
     try {
         const user = await userRepository.findOne({ username });
         if (bcrypt.compareSync(password, user.password)) {
-            const token = jwt.sign(
-                { id: user.id, role: user.role },
-                process.env.SECRET_KEY,
-                {
-                    expiresIn: '1h'
-                }
-            );
+            const token = jwtService.requestToken({
+                id: user.id,
+                role: user.role
+            });
 
             res.status(200).json({
                 success: true,

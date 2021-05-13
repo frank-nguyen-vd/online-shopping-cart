@@ -1,6 +1,13 @@
 const jwt = require('jsonwebtoken');
+const { _ } = require('lodash');
 
 require('dotenv').config();
+
+exports.getCredential = async (req) => {
+    const jwtToken = this.getToken(req);
+    const decode = this.decode(jwtToken);
+    return decode;
+};
 
 exports.decode = async (jwtToken) => {
     return await jwt.verify(jwtToken, process.env.SECRET_KEY, (err, decode) => {
@@ -11,6 +18,12 @@ exports.decode = async (jwtToken) => {
     });
 };
 
+exports.requestToken = (payload) => {
+    const token = jwt.sign(payload, process.env.SECRET_KEY, {
+        expiresIn: '1h'
+    });
+    return token;
+};
 exports.getToken = (req) => {
     const bearerToken = req.headers.authorization;
     if (bearerToken === undefined) return undefined;

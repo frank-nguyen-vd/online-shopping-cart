@@ -1,5 +1,6 @@
 const cartRepository = require('./repository');
 const productRepository = require('../products/repository');
+const jwtService = require('../../services/authentication/jwt-authenticate');
 
 exports.findById = async (customerId) => {
     const cart = await cartRepository.find(customerId);
@@ -17,7 +18,8 @@ exports.empty = async (customerId) => {
 
 exports.view = async (req, res) => {
     try {
-        const { userId } = req.body;
+        const credential = await jwtService.getCredential(req);
+        const userId = credential.id;
         let cart = await this.findById(userId);
         if (!cart) {
             cart = await cartRepository.create({
