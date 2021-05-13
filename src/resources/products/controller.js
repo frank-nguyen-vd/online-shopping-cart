@@ -1,3 +1,6 @@
+const jwtService = require('../../services/authentication/jwt-authenticate');
+const authService = require('../../services/authorization/casbin-authorization');
+
 const productRepository = require('./repository');
 exports.create = async (req, res) => {
     const { role } = await jwtService.getCredential(req);
