@@ -7,15 +7,15 @@ CUSTOMERS
 -   [x] can register an account
 -   [x] can log in
 -   [x] can view list of products
--   [ ] can add products to cart
--   [ ] can make payment
--   [ ] can view past transactions
+-   [x] can add products to cart
+-   [x] can make payment
+-   [x] can view past transactions
 
 ADMINISTATORS
 
 -   [x] can log in
 -   [x] can perform CRUD on products
--   [ ] can view list of transactions
+-   [x] can view list of transactions
 -   [x] can view list of customers
 
 ## TO-DO LIST
@@ -29,7 +29,7 @@ ADMINISTATORS
 
 -   [x] Create resource Users
 
-    -   [x] Create a model with fields username, password, role. The field `role` value is either `customer` or `administrator`. This role value will be included in access token.This is not a best pratice but it can be used as a proof of concept for authorization.
+    -   [x] Create a model with fields username, password, role. The field `role` value is either `customer` or `admin`. This role value will be included in access token.This is not a best pratice but it can be used as a proof of concept for authorization.
     -   [x] Create a repository with methods create, findAll, findById, updateById, removeById
     -   [x] Create a controller with methods create, findAll, findById, updateById, removeById. Allow only role administrator to access method findAll, findById, updateById, removeById
     -   [x] Create a router to route endpoints to handlers
@@ -38,7 +38,7 @@ ADMINISTATORS
 
     -   [x] Write endpoint POST /users that takes username and password and create new records in Users. Hash password before storing it in database
     -   [x] Write endpoint GET /users to return all users
-    -   [ ] Use pagination to return list of users.
+    -   [ ] Use pagination to return list of users. (next sprint)
     -   [x] Write endpoint GET /users/:id
     -   [x] Write endpoint PATCH /users/:id
     -   [x] Write endpoint DELETE /users/:id
@@ -48,7 +48,7 @@ ADMINISTATORS
     -   [x] Create a model with fields name, price.
     -   [x] Create a repository with methods create, findAll, findById, updateById, removeById
     -   [x] Create a controller with methods create, findAll, findById, updateById, removeById.
-    -   [ ] Allow only role administrator to access method updateById, removeById
+    -   [x] Allow only role administrator to access method updateById, removeById
     -   [x] Create a router to route endpoints to handlers
 
 -   [x] Create endpoints Products
@@ -58,32 +58,30 @@ ADMINISTATORS
     -   [x] Write endpoint DELETE /products/:id
     -   [x] Write endpoint GET /products that display all products. Use pagination to return products list.
 
--   [ ] Create resource Carts
+-   [x] Create resource Carts
 
-    -   [ ] Create a model with fields userId, totalPrice, items where items is an array of {productId, quantity, subTotal}
-    -   [ ] Create a repository with methods find, update, create
-    -   [ ] Create a controller with methods addItem. Adding non-positive quantity of an item to the cart will delete the item. To reduce the quantity of an item X, we first remove the item X from the cart then add the item X with new quantity to the cart
-    -   [ ] Create a router to route endpoints to handlers
+    -   [x] Create a model with fields userId, totalPrice, items where items is an array of {productId, quantity, subTotal}
+    -   [x] Create a repository with methods find, update, create
+    -   [x] Create a controller with methods addItem. Adding non-positive quantity of an item to the cart will delete the item. To reduce the quantity of an item X, we first remove the item X from the cart then add the item X with new quantity to the cart
+    -   [x] Create a router to route endpoints to handlers
 
--   [ ] Create endpoints Carts
+-   [x] Create endpoints Carts
 
-    -   [ ] Write endpoint POST /carts?customerId=[customerId] with payload {productId, quantity}.
+    -   [x] Write endpoint POST /carts with payload {productId, quantity}.
         > _Note_: quanity 0 means remove the product from the cart
-    -   [ ] Write endpoint GET /carts?customerId=[customerId] that display all products in the cart.
+    -   [x] Write endpoint GET /carts that display all products in the cart.
 
--   [ ] Create resource Transactions
+-   [x] Create resource Transactions
 
-    -   [ ] Create a model with fields userId, totalPrice, items where items is an array of {productId, quantity, subTotal}
-    -   [ ] Create a repository with methods create, findAll, findById
-    -   [ ] Create a controller with methods create, findAll, findById
-    -   [ ] Create a router to route endpoints to handlers
+    -   [x] Create a model with fields userId, totalPrice, items where items is an array of {productId, quantity, subTotal}
+    -   [x] Create a repository with methods create, findAll, findById
+    -   [x] Create a controller with methods create, findAll, findById
+    -   [x] Create a router to route endpoints to handlers
 
--   [ ] Create endpoints Transactions
+-   [x] Create endpoints Transactions
 
-    -   [ ] Write endpoint GET /Transactions?userId=[userId]
-    -   [ ] Write endpoint GET /Transactions/:id
-
--   [ ] Write endpoint POST /checkout with the payload {cart, payment} where payment object is encrypted. We can use Stripe API for payment
+    -   [x] Write endpoint GET /Transactions to retrieve all transactions below to an user
+    -   [x] Write endpoint POST /Transactions to checkout shopping cart. In future sprint we can use Stripe API to process payment
 
 ## HOW TO TEST THIS APPLICATION
 
@@ -124,6 +122,12 @@ npm run watch
 
 > _tip_: **npm i** is shorthand for **npm install**
 
+#### Step 3: Run acceptance tests
+
+First, you need to install Postman then import `acceptance_tests.json` located in folder `<root>/tests`. After that run the `nodejs-epxress-assignment` collection.
+
+> _Note_: I have not written tests in postman yet. It takes as much time to write tests as to develop feature.
+
 ## API Reference
 
 POST `/users`
@@ -149,6 +153,11 @@ POST `/users`
 }
 ```
 
+-   Possible errors:
+    -   400: Bad request
+    -   500: Internal server error
+        > _Note_: This is my documentation format. I dont have time to write in details yet.
+
 GET `/users`
 
 -   Description: Get a list of users
@@ -165,6 +174,11 @@ GET `/users`
     ]
 }
 ```
+
+-   Possible errors:
+    -   400: Bad request
+    -   500: Internal server error
+        > _Note_: This is my documentation format. I dont have time to write in details yet.
 
 POST `/users/login`
 
@@ -189,6 +203,11 @@ POST `/users/login`
 }
 ```
 
+-   Possible errors:
+    -   400: Bad request
+    -   500: Internal server error
+        > _Note_: This is my documentation format. I dont have time to write in details yet.
+
 GET `/products`
 
 -   Description: Get a list of products
@@ -211,6 +230,11 @@ GET `/products`
 }
 ```
 
+-   Possible errors:
+    -   400: Bad request
+    -   500: Internal server error
+        > _Note_: This is my documentation format. I dont have time to write in details yet.
+
 GET '/products/:id'
 
 -   Description: Retrieve a product with id
@@ -227,11 +251,16 @@ GET '/products/:id'
 }
 ```
 
-PATcH '/products/:id'
+-   Possible errors:
+    -   400: Bad request
+    -   500: Internal server error
+        > _Note_: This is my documentation format. I dont have time to write in details yet.
+
+PATCH '/products/:id'
 
 -   Description: Update product details given its id
 -   Request Arguments:
-    -   Bearer token
+    -   Bearer token: Only admin access token can use this endpoint
 -   Request Body:
 
 ```json
@@ -253,11 +282,16 @@ PATcH '/products/:id'
 }
 ```
 
+-   Possible errors:
+    -   400: Bad request
+    -   500: Internal server error
+        > _Note_: This is my documentation format. I dont have time to write in details yet.
+
 DELETE `/products/:id`
 
 -   Description: Delete a product given id
 -   Request Arguments:
-    -   Bearer token
+    -   Bearer token: Only admin access token can use this endpoint
 -   Returns:
 
 ```json
@@ -270,7 +304,13 @@ DELETE `/products/:id`
 }
 ```
 
+-   Possible errors:
+    -   400: Bad request
+    -   500: Internal server error
+        > _Note_: This is my documentation format. I dont have time to write in details yet.
+
 GET `/carts`
+s
 
 -   Description: Retrieve cart details of a customer
 -   Request Arguments:
@@ -291,6 +331,11 @@ GET `/carts`
     }
 }
 ```
+
+-   Possible errors:
+    -   400: Bad request
+    -   500: Internal server error
+        > _Note_: This is my documentation format. I dont have time to write in details yet.
 
 POST `/carts`
 
